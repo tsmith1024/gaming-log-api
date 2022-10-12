@@ -1,8 +1,8 @@
 const { DataTypes } = require("sequelize");
 const { db } = require("./database");
 
-const User = db.define(
-  "User",
+const Rating = db.define(
+  "Rating",
   {
     id: {
       type: DataTypes.UUID,
@@ -10,24 +10,18 @@ const User = db.define(
       primaryKey: true,
       allowNull: false,
     },
-    email: {
-      type: DataTypes.STRING,
+    rating: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
-        isEmail: true,
+        min: 0,
+        max: 5, // could move this to 10?
       },
     },
-    firstName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    lastName: DataTypes.STRING,
-    steamUsername: DataTypes.STRING,
-    xboxUsername: DataTypes.STRING,
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = { User };
+module.exports = { Rating };
