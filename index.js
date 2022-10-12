@@ -1,5 +1,5 @@
 const express = require("express");
-const { User } = require("./models/user");
+const { syncModels } = require("./models/models");
 const port = process.env.PORT;
 
 const app = express();
@@ -15,7 +15,3 @@ syncModels().then((_) => {
     console.log(`App listening on port ${port}`);
   });
 });
-
-async function syncModels() {
-  await User.sync({ alter: true });
-}
