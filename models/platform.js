@@ -1,8 +1,8 @@
 const { DataTypes } = require("sequelize");
 const { db } = require("./database");
 
-const User = db.define(
-  "User",
+const Platform = db.define(
+  "Platform",
   {
     id: {
       type: DataTypes.UUID,
@@ -10,24 +10,27 @@ const User = db.define(
       primaryKey: true,
       allowNull: false,
     },
-    email: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isEmail: true,
+        isIn: [
+          "pc",
+          "xbox-series",
+          "xbox-one",
+          "ps5",
+          "ps4",
+          "switch",
+          "mobile",
+          "vr",
+          "other",
+        ],
       },
     },
-    firstName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    lastName: DataTypes.STRING,
-    steamUsername: DataTypes.STRING,
-    xboxUsername: DataTypes.STRING,
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = { User };
+module.exports = { Platform };
