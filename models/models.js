@@ -30,8 +30,6 @@ async function syncModels() {
 }
 
 async function setupAssociations() {
-  Rating.belongsTo(Game);
-
   Game.belongsToMany(Category, { through: GameCategories });
   Game.belongsToMany(Developer, { through: GameDevelopers });
   Game.belongsToMany(Platform, { through: GamePlatforms });
