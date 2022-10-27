@@ -14,6 +14,10 @@ const Game = db.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
     publishedDate: DataTypes.DATEONLY,
     minPlayers: {
       type: DataTypes.INTEGER,
@@ -31,8 +35,9 @@ const Game = db.define(
     esrbRating: {
       type: DataTypes.STRING,
       validate: {
-        isIn: ["e", "e10", "t", "m", "ao", "rp", "unrated"],
+        isIn: [["e", "e10", "t", "m", "ao", "rp", "unrated"]],
       },
+      defaultValue: "rp",
     },
   },
   {

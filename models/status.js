@@ -14,7 +14,7 @@ const Status = db.define(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isIn: ["completed", "inProgress", "onHold", "stopped", "toPlay"],
+        isIn: [["completed", "inProgress", "onHold", "stopped", "toPlay"]],
       },
     },
     progress: {

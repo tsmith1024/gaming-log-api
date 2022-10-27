@@ -33,7 +33,7 @@ const UserGames = db.define("UserGames", {
     allowNull: false,
     defaultValue: "toPlay",
     validate: {
-      isIn: ["completed", "inProgress", "onHold", "stopped", "toPlay"],
+      isIn: [["completed", "inProgress", "onHold", "stopped", "toPlay"]],
     },
   },
 });
