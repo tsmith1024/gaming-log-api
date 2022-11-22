@@ -1,17 +1,16 @@
 const { Category } = require("./category");
 const { Game } = require("./game");
-const { Rating } = require("./rating");
 const { User } = require("./user");
 const { Platform } = require("./platform");
+const { UserGames } = require("./userGames");
+const { Developer } = require("./developer");
+
 const {
   GameCategories,
   UserCategories,
-  UserGames,
   GamePlatforms,
   GameDevelopers,
 } = require("./associations");
-const { Status } = require("./status");
-const { Developer } = require("./developer");
 
 async function syncModels() {
   await setupAssociations();
@@ -39,13 +38,11 @@ async function setupAssociations() {
 }
 
 module.exports = {
+  syncModels,
   Category,
   Developer,
   Game,
   Platform,
-  Rating,
-  Status,
-  syncModels,
   User,
   UserGames,
 };
