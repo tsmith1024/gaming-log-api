@@ -1,13 +1,14 @@
 const { Game } = require("../models/game");
 
+// GET /games
 const getGames = async (req, res, next) => {
   let games;
   try {
     games = await Game.findAll();
-  } catch (e) {
+  } catch (error) {
     res.status(401).json({
       message: "unable to find games",
-      error: e,
+      error,
     });
     return;
   }
@@ -15,6 +16,7 @@ const getGames = async (req, res, next) => {
   res.json(games);
 };
 
+// GET /games/:id
 const getGame = async (req, res, next) => {
   let gameID = req.params.id;
 
@@ -32,9 +34,17 @@ const getGame = async (req, res, next) => {
   res.json(game);
 };
 
+// POST /games
 const createGame = async (req, res, next) => {
-  const { name, publishedDate, minPlayers, maxPlayers, online, esrbRating } =
-    req.body;
+  const {
+    name,
+    publishedDate,
+    minPlayers,
+    maxPlayers,
+    online,
+    esrbRating,
+    description,
+  } = req.body;
 
   let game;
   try {
@@ -45,6 +55,7 @@ const createGame = async (req, res, next) => {
       maxPlayers,
       online,
       esrbRating,
+      description,
     });
   } catch (e) {
     res.status(422).json({

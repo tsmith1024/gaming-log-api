@@ -1,13 +1,21 @@
 const express = require("express");
-const { updateGame, deleteGame } = require("../controllers/games");
-const {
-  getPlatforms,
-  createPlatform,
-  getPlatform,
-} = require("../controllers/platforms");
+const { getPlatforms } = require("../controllers/platforms");
+
+// const {}
 
 const router = express.Router();
 
-router.route("/").get(getPlatforms).post(createPlatform);
+// http://localhost:3000/platforms
+router
+  .route("/")
+  .get(getPlatforms) // GET list of platforms
+  .post(() => {}); // POST create
 
-router.route("/:id").get(getPlatform).put(updateGame).delete(deleteGame);
+// http://localhost:3000/platforms/12345
+router
+  .route("/:id")
+  .get(() => {}) // GET detail/single
+  .put(() => {}) // PUT update
+  .delete(() => {}); // DELETE destroy
+
+module.exports = router;
