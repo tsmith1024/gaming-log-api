@@ -2,6 +2,10 @@ const express = require("express");
 const logger = require("./middleware/logger");
 const { syncModels } = require("./models/models");
 const gamesRouter = require("./routes/games");
+const platformsRouter = require("./routes/platforms");
+const developersRouter = require("./routes/developers");
+const categoriesRouter = require("./routes/categories");
+const userGamesRouter = require("./routes/userGames");
 
 const port = process.env.PORT;
 
@@ -11,6 +15,10 @@ app.use(express.json());
 app.use(logger);
 
 app.use("/games", gamesRouter);
+app.use("/platforms", platformsRouter);
+app.use("/developers", developersRouter);
+app.use("/categories", categoriesRouter);
+app.use("/userGames", userGamesRouter);
 
 app.get("/", (req, res) => {
   res.json({
