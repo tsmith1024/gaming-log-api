@@ -16,14 +16,19 @@ const User = db.define(
       validate: {
         isEmail: true,
       },
+      unique: true,
     },
     firstName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    lastName: DataTypes.STRING,
-    steamUsername: DataTypes.STRING,
-    xboxUsername: DataTypes.STRING,
+    passwordHash: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    // lastName: DataTypes.STRING,
+    // steamUsername: DataTypes.STRING,
+    // xboxUsername: DataTypes.STRING,
   },
   {
     timestamps: true,

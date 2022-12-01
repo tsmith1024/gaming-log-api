@@ -6,6 +6,8 @@ const platformsRouter = require("./routes/platforms");
 const developersRouter = require("./routes/developers");
 const categoriesRouter = require("./routes/categories");
 const userGamesRouter = require("./routes/userGames");
+const userRouter = require("./routes/users");
+const authRouter = require("./routes/auth");
 
 const port = process.env.PORT;
 
@@ -19,6 +21,8 @@ app.use("/platforms", platformsRouter);
 app.use("/developers", developersRouter);
 app.use("/categories", categoriesRouter);
 app.use("/userGames", userGamesRouter);
+app.use("/users", userRouter);
+app.use("/auth", authRouter);
 
 app.get("/", (req, res) => {
   res.json({
