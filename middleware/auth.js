@@ -66,4 +66,20 @@ const verifyToken = async (req, res, next) => {
 
 // could build another middleware that would load user only when needed
 
-module.exports = { verifyToken }
+// role verification middleware
+const verifyRole = (...roles) => {
+  return (req, res, next) => {
+    // if we don't have a user
+    // or if user role isn't in roles list
+    if (!req.user || !roles.includes(req.user.role)) {
+      // error
+      res.status(401).json({
+        message: "Role unauthorized for this route",
+      })
+      return
+    }
+    next()
+  }
+}
+
+module.exports = { verifyToken, verifyRole }

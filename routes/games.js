@@ -7,7 +7,7 @@ const {
   updateGame,
   deleteGame,
 } = require("../controllers/games")
-const { verifyToken } = require("../middleware/auth")
+const { verifyToken, verifyRole } = require("../middleware/auth")
 
 const router = express.Router()
 
@@ -16,10 +16,14 @@ const router = express.Router()
 
 // "/" handlers shorthand
 // localhost:3000/games
-router.route("/").get(verifyToken, getGames).post(createGame)
+router.route("/").get(verifyToken, getGames).post(verifyToken, createGame)
 
 // "/:id" handlers
 // localhost:3000/games/:id
-router.route("/:id").get(getGame).put(updateGame).delete(deleteGame)
+router
+  .route("/:id")
+  .get(getGame)
+  .put(verifyToken, verifyRole("admin"), updateGame)
+  .delete(verifyToken, verifyRole("admin"), deleteGame)
 
 module.exports = router
