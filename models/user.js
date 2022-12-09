@@ -1,5 +1,5 @@
-const { DataTypes } = require("sequelize");
-const { db } = require("./database");
+const { DataTypes } = require("sequelize")
+const { db } = require("./database")
 
 const User = db.define(
   "User",
@@ -26,6 +26,17 @@ const User = db.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: "user",
+      validate: {
+        isIn: [
+          "user", // least capable/powerful
+          "admin", // most capable/powerful
+        ],
+      },
+    },
     // lastName: DataTypes.STRING,
     // steamUsername: DataTypes.STRING,
     // xboxUsername: DataTypes.STRING,
@@ -33,6 +44,6 @@ const User = db.define(
   {
     timestamps: true,
   }
-);
+)
 
-module.exports = { User };
+module.exports = { User }
