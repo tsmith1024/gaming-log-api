@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require("express")
 
 const {
   getUserGames,
@@ -6,16 +6,18 @@ const {
   createUserGame,
   updateUserGame,
   deleteUserGame,
-} = require("../controllers/userGames");
+} = require("../controllers/userGames")
 
-const router = express.Router();
+const { verifyToken } = require("../middleware/auth")
 
-router.route("/").get(getUserGames).post(createUserGame);
+const router = express.Router()
+
+router.route("/").get(getUserGames).post(verifyToken, createUserGame)
 
 router
   .route("/:id")
   .get(getUserGame)
-  .put(updateUserGame)
-  .delete(deleteUserGame);
+  .put(verifyToken, updateUserGame)
+  .delete(verifyToken, deleteUserGame)
 
-module.exports = router;
+module.exports = router
