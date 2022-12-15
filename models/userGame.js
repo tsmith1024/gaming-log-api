@@ -1,7 +1,7 @@
-const { DataTypes } = require("sequelize");
-const { db } = require("./database");
+const { DataTypes } = require("sequelize")
+const { db } = require("./database")
 
-const UserGames = db.define("UserGames", {
+const UserGame = db.define("UserGames", {
   id: {
     primaryKey: true,
     type: DataTypes.UUID,
@@ -31,8 +31,16 @@ const UserGames = db.define("UserGames", {
       isIn: [["completed", "inProgress", "onHold", "stopped", "toPlay"]],
     },
   },
-});
+  GameId: {
+    type: DataTypes.UUID,
+    allowNull: false,
+  },
+  UserId: {
+    type: DataTypes.UUID,
+    allowNull: false,
+  },
+})
 
 module.exports = {
-  UserGames,
-};
+  UserGame,
+}
