@@ -1,5 +1,5 @@
-const { DataTypes } = require("sequelize");
-const { db } = require("./database");
+const { DataTypes } = require("sequelize")
+const { db } = require("./database")
 
 const Game = db.define(
   "Game",
@@ -13,11 +13,19 @@ const Game = db.define(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     description: {
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    // releaseYear: {
+    //   type: DataTypes.INTEGER,
+    //   validate: {
+    //     min: 1960,
+    //     max: 2023,
+    //   },
+    // },
     publishedDate: DataTypes.DATEONLY,
     minPlayers: {
       type: DataTypes.INTEGER,
@@ -31,6 +39,7 @@ const Game = db.define(
     online: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
+      allowNull: false,
     },
     esrbRating: {
       type: DataTypes.STRING,
@@ -43,6 +52,6 @@ const Game = db.define(
   {
     timestamps: true,
   }
-);
+)
 
-module.exports = { Game };
+module.exports = { Game }
