@@ -1,3 +1,4 @@
+const { Op, where } = require("sequelize")
 const { Game } = require("../models/game")
 
 // GET /games
@@ -5,9 +6,52 @@ const getGames = async (req, res, next) => {
   console.log(req.userID)
   // since we have a user, look for their games only?
 
+  console.log(req.query)
+
+  // example request
+  // http://localhost:3000/games?name=he&order=createdAt&ascending=true
+  const { name, online, order, ascending } = req.query
+
+  let whereClause = {}
+
+  if (name !== undefined) {
+    whereClause = {
+      ...whereClause,
+      name: {
+        [Op.iLike]: `%${name}%`,
+      },
+    }
+  }
+
+  if (online !== undefined) {
+    whereClause = {
+      ...whereClause,
+      online: online === "true" || online === "1",
+    }
+  }
+
+  let query = {
+    where: whereClause,
+  }
+
+  if (order !== undefined) {
+    let isAscending =
+      ascending === "true" || ascending === "1" || ascending === undefined
+    let asc = isAscending ? "ASC" : "DESC"
+
+    query = {
+      ...query,
+      order: [[order, asc]],
+    }
+  }
+
+  query = {
+    ...query,
+  }
+
   let games
   try {
-    games = await Game.findAll()
+    games = await Game.findAll(query)
   } catch (error) {
     res.status(401).json({
       message: "unable to find games",
