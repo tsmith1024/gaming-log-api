@@ -60,4 +60,96 @@ const signin = async (req, res, next) => {
   return res.json({ token })
 }
 
-module.exports = { signin }
+// requestRecovery sets recoveryToken
+// and expiration on a user's account
+const requestRecovery = async (req, res) => {
+  const { email } = req.body
+
+  let user
+  try {
+    user = await User.findOne({
+      where: {
+        email,
+      },
+    })
+  } catch (error) {
+    res.status(500).json({
+      message: "server error",
+    })
+    return
+  }
+
+  if (!user) {
+    res.status(200).json({
+      message:
+        "If a user for that email exists, please check your email for instructions on resetting your password.",
+    })
+  }
+
+  // TODO: make sure to add logic for random token here
+  const token = "A1B2C3"
+
+  const HOUR_IN_MILLISECONDS = 3600000
+  const expiration = Date.now() + HOUR_IN_MILLISECONDS
+
+  try {
+    await user.update({
+      recoveryToken: token,
+      recoveryTokenExpiration: expiration,
+    })
+  } catch (error) {
+    res.status(500).json({
+      message: "server error",
+    })
+    return
+  }
+
+  res.status(200).json({
+    // TODO: remove the token later
+    token,
+    expiration,
+    message:
+      "If a user for that email exists, please check your email for instructions on resetting your password.",
+  })
+}
+
+const recoverAccount = async (req, res) => {
+  const { email, token, password } = req.body
+
+  let user
+  try {
+    user = await User.findOne({
+      where: {
+        email,
+      },
+    })
+  } catch (error) {
+    res.status(500).json({
+      message: "server error",
+    })
+    return
+  }
+
+  if (!user) {
+    res.status(500).json({
+      message: "server error",
+    })
+    return
+  }
+
+  // do the tokens match? is the expiration after current time?
+  if (
+    user.recoveryToken !== token ||
+    Date.now() > user.recoveryTokenExpiration
+  ) {
+    res.status(401).json({
+      message: "Unauthorized to make that change",
+    })
+    return
+  }
+
+  // FOR NEXT TIME...
+  // hash that password, save to DB, return response
+}
+
+module.exports = { signin, requestRecovery }
