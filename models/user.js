@@ -37,6 +37,14 @@ const User = db.define(
         ],
       },
     },
+    recoveryToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    recoveryTokenExpiration: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
     // lastName: DataTypes.STRING,
     // steamUsername: DataTypes.STRING,
     // xboxUsername: DataTypes.STRING,
