@@ -1,10 +1,16 @@
-const express = require("express");
+const express = require("express")
 
-const { signin } = require("../controllers/auth");
+const {
+  signin,
+  requestRecovery,
+  recoverAccount,
+} = require("../controllers/auth")
 
-const router = express.Router();
+const router = express.Router()
 
 // signin
-router.route("/signin").post(signin);
+router.route("/signin").post(signin)
+router.route("/recover").post(requestRecovery)
+router.route("/resetPassword").post(recoverAccount)
 
-module.exports = router;
+module.exports = router
