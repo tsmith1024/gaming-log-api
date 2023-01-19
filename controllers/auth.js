@@ -2,6 +2,7 @@ const { User } = require("../models/user")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const { JWT_ISSUER, JWT_SECRET } = require("../utilities/constants")
+const { Op } = require("sequelize")
 
 // create signin handler
 const signin = async (req, res, next) => {
@@ -87,7 +88,20 @@ const requestRecovery = async (req, res) => {
   }
 
   // TODO: make sure to add logic for random token here
-  const token = "A1B2C3"
+  const oldToken = "A1B2C3"
+  let token = ""
+  const tokenLength = 8
+  for (let i = 0; i < tokenLength; i++) {
+    let letters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+
+    let characters = letters.split("")
+    let index = Math.floor(Math.random() * characters.length).toFixed(0)
+
+    let character = characters[index]
+
+    token += character
+  }
 
   const HOUR_IN_MILLISECONDS = 3600000
   const expiration = Date.now() + HOUR_IN_MILLISECONDS
@@ -120,7 +134,11 @@ const recoverAccount = async (req, res) => {
   try {
     user = await User.findOne({
       where: {
-        email,
+        email: email,
+        recoveryToken: token,
+        recoveryTokenExpiration: {
+          [Op.gt]: new Date(),
+        },
       },
     })
   } catch (error) {
@@ -131,25 +149,32 @@ const recoverAccount = async (req, res) => {
   }
 
   if (!user) {
+    res.status(401).json({
+      message: "not authorized",
+    })
+    return
+  }
+
+  // hash that password, save to DB, return response
+  let passwordHash = bcrypt.hashSync(password, 12)
+
+  let result
+  try {
+    result = await user.update({
+      passwordHash,
+      recoveryToken: null,
+      recoveryTokenExpiration: null,
+    })
+  } catch (error) {
     res.status(500).json({
       message: "server error",
     })
     return
   }
 
-  // do the tokens match? is the expiration after current time?
-  if (
-    user.recoveryToken !== token ||
-    Date.now() > user.recoveryTokenExpiration
-  ) {
-    res.status(401).json({
-      message: "Unauthorized to make that change",
-    })
-    return
-  }
-
-  // FOR NEXT TIME...
-  // hash that password, save to DB, return response
+  return res.status(200).json({
+    message: "password reset successfully!",
+  })
 }
 
-module.exports = { signin, requestRecovery }
+module.exports = { signin, requestRecovery, recoverAccount }
