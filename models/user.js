@@ -45,7 +45,7 @@ const User = db.define(
       type: DataTypes.DATE,
       allowNull: true,
     },
-    // lastName: DataTypes.STRING,
+    lastName: DataTypes.STRING,
     // steamUsername: DataTypes.STRING,
     // xboxUsername: DataTypes.STRING,
   },
