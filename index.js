@@ -9,6 +9,8 @@ const userGamesRouter = require("./routes/userGames")
 const userRouter = require("./routes/users")
 const authRouter = require("./routes/auth")
 
+require("dotenv").config()
+
 const port = process.env.PORT
 
 const app = express()

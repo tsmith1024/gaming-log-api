@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const { JWT_ISSUER, JWT_SECRET } = require("../utilities/constants")
 const { Op } = require("sequelize")
+const sendgridMail = require("@sendgrid/mail")
 
 // create signin handler
 const signin = async (req, res, next) => {
@@ -87,8 +88,6 @@ const requestRecovery = async (req, res) => {
     })
   }
 
-  // TODO: make sure to add logic for random token here
-  const oldToken = "A1B2C3"
   let token = ""
   const tokenLength = 8
   for (let i = 0; i < tokenLength; i++) {
@@ -118,10 +117,47 @@ const requestRecovery = async (req, res) => {
     return
   }
 
+  // TODO: send mail with token here!
+  sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
+
+  const message = {
+    to: "tsmith1024@gmail.com",
+    from: "taylor@edfarm.org",
+    templateId: "d-59e9c2e49d7648538e545d1954b5d753",
+    dynamicTemplateData: {
+      name: user.firstName,
+      token,
+    },
+
+    // subject: "Testing this out!",
+    // text: `Does this work? Here is your token: ${token}`,
+    // html: `<h1>Hello!</h1><p>Here is your token: ${token}</p>`,
+  }
+
+  let results = await sendgridMail.send(message)
+
+  sendgridMail.send(message).then(
+    () => {
+      console.log("email worked!")
+    },
+    (error) => {
+      console.error(error)
+
+      if (error.response) {
+        console.error(error.response.body)
+      }
+
+      res.status(500).json({
+        message: "Error sending recovery token",
+      })
+      return
+    }
+  )
+
   res.status(200).json({
     // TODO: remove the token later
-    token,
-    expiration,
+    // token,
+    // expiration,
     message:
       "If a user for that email exists, please check your email for instructions on resetting your password.",
   })

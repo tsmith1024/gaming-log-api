@@ -1,5 +1,7 @@
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3")
 const { User } = require("../models/user")
 const bcrypt = require("bcryptjs")
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner")
 
 // POST /users
 const createUser = async (req, res, next) => {
@@ -58,9 +60,9 @@ const updateUser = async (req, res, next) => {
     return
   }
 
-  const { email, firstName, role } = req.body
+  const { email, firstName, role, profilePicture } = req.body
 
-  const userData = { email, firstName, role }
+  const userData = { email, firstName, role, profilePicture }
 
   try {
     await user.update(userData)
@@ -75,4 +77,27 @@ const updateUser = async (req, res, next) => {
   res.json(user)
 }
 
-module.exports = { createUser, updateUser }
+const uploadURL = async (req, res, next) => {
+  const s3Client = new S3Client({ region: process.env.AWS_REGION })
+
+  const putCommand = new PutObjectCommand({
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: `test-${Date.now()}.jpg`,
+    ACL: "public-read",
+  })
+
+  const uploadURL = await getSignedUrl(s3Client, putCommand, {
+    expiresIn: 600,
+  })
+
+  const imageURL = uploadURL.split("?")[0]
+
+  // we COULD update user profile here... but that might be bad.
+
+  return res.status(200).json({
+    uploadURL,
+    imageURL,
+  })
+}
+
+module.exports = { createUser, updateUser, uploadURL }
